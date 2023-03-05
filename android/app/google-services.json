@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "409095380824",
+    "project_id": "u-pay-aa9c1",
+    "storage_bucket": "u-pay-aa9c1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:409095380824:android:b19a05712c819b2ccd0f2d",
+        "android_client_info": {
+          "package_name": "com.PCE.u_pay_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "409095380824-lvgrdt78cnkajvhjlk5grallcqlocod5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9mdllP4DJpqKB9GVli7wcVuKL9bp0jvM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "409095380824-lvgrdt78cnkajvhjlk5grallcqlocod5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
