@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:u_pay_app/components/input_field.dart';
 import 'package:u_pay_app/components/rounded_button.dart';
 import 'package:u_pay_app/components/password_field.dart';
+import 'package:u_pay_app/components/upi_widget.dart';
 import 'package:u_pay_app/screens/home_page.dart';
 import 'package:u_pay_app/screens/otp_screen.dart';
 import 'package:u_pay_app/screens/welcome_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'otp_screen.dart';
+import 'package:u_pay_app/constants.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -26,8 +30,58 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late String newPassword;
   late String confirmPassword;
   late double balance = 5000;
+  late double sentAmount = 0;
+  late double recieveAmount = 0;
+  late String error_message = '';
 
   final _firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
+  var verificationId = '';
+  final phoneController = TextEditingController();
+  late String verifyPhoneNumberValue = phoneController.text;
+
+  Future<void> authenticatePhoneNumber(String phone) async {
+    await _auth.verifyPhoneNumber(
+        phoneNumber: phone,
+        verificationCompleted: (credential) async {
+          // await Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => OtpScreen(
+          //               userPhoneNumber: userPhoneNumber,
+          //               // Username: Username,
+          //               verificationId: verificationId,
+          //             )));
+        },
+        verificationFailed: (e) {
+          setState(() {
+            if (e.code == 'invalid-phone-number') {
+              error_message = 'Enter a valid phone number and try again.';
+            } else {
+              error_message = '';
+            }
+          });
+        },
+        codeSent: (verificationId, resendToken) async {
+          await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OtpScreen(
+                        userPhoneNumber: userPhoneNumber,
+                        Username: Username,
+                        Email: Email,
+                        Name: Name,
+                        confirmPassword: confirmPassword,
+                        balance: balance,
+                        sentAmount: sentAmount,
+                        recieveAmount: recieveAmount,
+                        verificationId: verificationId,
+                      )));
+        },
+        codeAutoRetrievalTimeout: (verificationId) {
+          this.verificationId = verificationId;
+        });
+  }
 
   //Defining a function to check that all inputs are given in TextField
   Future<void> checkInputField() async {
@@ -38,13 +92,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         newPassword.trim().isNotEmpty &&
         confirmPassword.trim().isNotEmpty) {
       verifyPassword();
-      await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => OtpScreen(
-                    userPhoneNumber: userPhoneNumber,
-                    Username: Username,
-                  )));
+      // await Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) => OtpScreen(
+      //               userPhoneNumber: userPhoneNumber,
+      //               Username: Username,
+      //             )));
     } else {
       showDialog(
         context: context,
@@ -203,12 +257,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             SizedBox(
                               height: 35.0,
                             ),
-                            InputField(
-                              hintText: 'Enter Phone Number',
-                              onChanged: (value) {
-                                userPhoneNumber = value;
-                              },
-                              fieldIcon: Icon(Icons.phone),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                if (error_message.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        15.0, 0.0, 0.0, 8.0),
+                                    child: Text(
+                                      error_message,
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 12.0,
+                                      ),
+                                    ),
+                                  ),
+                                TextField(
+                                  controller: phoneController,
+                                  decoration: kInputFieldDecoration.copyWith(
+                                    hintText: 'Enter Mobile Number',
+                                    prefixIcon: Icon(Icons.phone_android),
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      userPhoneNumber = value;
+                                    });
+                                  },
+                                ),
+                              ],
                             ),
                             SizedBox(
                               height: 35.0,
@@ -265,14 +341,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     Colour: Color(0xff24B3A8),
                                     Name: 'Submit',
                                     onPressed: () {
-                                      _firestore.collection('Users').add({
-                                        'Balance': balance,
-                                        'Email': Email,
-                                        'Name': Name,
-                                        'Password': confirmPassword,
-                                        'Phone': userPhoneNumber,
-                                        'Username': Username
-                                      });
+                                      // _firestore.collection('Users').add({
+                                      //   'Balance': balance,
+                                      //   'Email': Email,
+                                      //   'Name': Name,
+                                      //   'Password': confirmPassword,
+                                      //   'Phone': userPhoneNumber,
+                                      //   'Username': Username
+                                      // });
+                                      authenticatePhoneNumber(
+                                          verifyPhoneNumberValue.trim());
                                     },
                                   ),
                                 ],

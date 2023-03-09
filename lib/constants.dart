@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 const kInputFieldDecoration = InputDecoration(
-  prefixIcon: Icon(Icons.person),
   hintText: "Enter a value",
   hintStyle: TextStyle(color: Colors.grey),
   focusedBorder: OutlineInputBorder(

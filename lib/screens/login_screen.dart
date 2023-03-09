@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:u_pay_app/components/rounded_button.dart';
 import 'package:u_pay_app/components/input_field.dart';
 import 'package:u_pay_app/components/password_field.dart';
-import 'package:u_pay_app/screens/home_page.dart';
+import 'package:u_pay_app/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'home.dart';
 
@@ -15,6 +16,46 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+
+  late String _errorMessage = '';
+  late bool _isLoading = false;
+
+  void logIn() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = '';
+    });
+    try {
+      late String password = passwordController.text;
+      late String email = emailController.text;
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Home()),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        setState(() {
+          _errorMessage = 'No user found for that email.';
+          _isLoading = false;
+        });
+      } else if (e.code == 'wrong-password') {
+        setState(() {
+          _errorMessage = 'Wrong password provided for that user.';
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +120,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Padding(
                   padding: EdgeInsets.only(top: 20.0),
                   child: Container(
-
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(horizontal: 20.0),
                     decoration: BoxDecoration(
@@ -98,11 +138,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               SizedBox(
                                 height: 35.0,
                               ),
-                              InputField(
-                                hintText: 'Enter your email',
-                                onChanged: (value) {},
-                                fieldIcon: Icon(Icons.mail),
-
+                              TextField(
+                                controller: emailController,
+                                decoration: kInputFieldDecoration.copyWith(
+                                  hintText: 'Enter your email',
+                                  prefixIcon: Icon(Icons.email),
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    print(value);
+                                  });
+                                },
                               ),
                               SizedBox(
                                 height: 30.0,
@@ -116,16 +162,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                   print(value);
                                 },
                               ),
+                              SizedBox(height: 16.0),
+                              Text(
+                                _errorMessage,
+                                style: TextStyle(color: Colors.red),
+                              ),
                               SizedBox(
                                 height: 200.0,
                               ),
                               RoundedButton(
                                   Colour: Color(0xff24B3A8),
                                   Name: 'Log In',
-                                  onPressed: () { Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Home()));
+                                  onPressed: () {
+                                    logIn();
+                                    // Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) => Home()));
                                   })
                             ],
                           ),

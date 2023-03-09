@@ -34,13 +34,13 @@ class _AddAccountState extends State<AddAccount> {
         newPassword.trim().isNotEmpty &&
         confirmPassword.trim().isNotEmpty) {
       verifyPassword();
-      await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => OtpScreen(
-                    userPhoneNumber: userPhoneNumber,
-                    Username: Username,
-                  )));
+      // await Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) => OtpScreen(
+      //               userPhoneNumber: userPhoneNumber,
+      //               Username: Username,
+      //             )));
     } else {
       showDialog(
         context: context,
