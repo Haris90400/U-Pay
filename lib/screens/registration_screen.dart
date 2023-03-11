@@ -250,7 +250,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         ),
                                       ),
                                     TextField(
-                                      keyboardType: TextInputType.number,
                                       controller: phoneController,
                                       decoration:
                                           kInputFieldDecoration.copyWith(
