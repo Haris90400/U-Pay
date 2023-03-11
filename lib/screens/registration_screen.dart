@@ -21,6 +21,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController passwordController1 = TextEditingController();
   TextEditingController passwordController2 = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
 
   //Defing all the data in the text field
   late String Name;
@@ -41,6 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final phoneController = TextEditingController();
   late String verifyPhoneNumberValue = phoneController.text;
   bool _loading = false;
+  String username_message = '';
 
   Future<void> authenticatePhoneNumber(String phone) async {
     setState(() {
@@ -104,6 +106,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  bool verifyUsername() {
+    if (usernameController.text.contains("@")) {
+      setState(() {
+        username_message = 'The username should not contain @ symbol';
+      });
+      return false;
+    } else {
+      setState(() {
+        username_message = '';
+      });
+      return true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,7 +164,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                         ),
-
                         Container(
                           padding: EdgeInsets.only(left: 50),
                           child: Hero(
@@ -159,7 +174,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),
@@ -236,6 +250,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         ),
                                       ),
                                     TextField(
+                                      keyboardType: TextInputType.number,
                                       controller: phoneController,
                                       decoration:
                                           kInputFieldDecoration.copyWith(
@@ -263,15 +278,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 SizedBox(
                                   height: 35.0,
                                 ),
-                                InputField(
-                                  hintText: 'Enter username for U-Pay Id',
+                                TextField(
+                                  controller: usernameController,
+                                  decoration: kInputFieldDecoration.copyWith(
+                                    hintText: 'Enter Username for U-pay Id',
+                                    prefixIcon:
+                                        Icon(Icons.account_balance_wallet),
+                                  ),
                                   onChanged: (value) {
-                                    Username = value + "@upay";
+                                    setState(() {
+                                      Username = value + "@upay";
+                                      verifyUsername();
+                                    });
                                   },
-                                  fieldIcon: Icon(Icons.account_balance_wallet),
                                 ),
                                 SizedBox(
-                                  height: 35.0,
+                                  height: 10,
+                                ),
+                                Text(
+                                  username_message,
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                SizedBox(
+                                  height: 15.0,
                                 ),
                                 PasswordField(
                                   controller: passwordController1,
@@ -301,7 +330,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   password_message,
                                   style: TextStyle(color: Colors.red),
                                 ),
-
                                 Container(
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -320,8 +348,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             // });
                                             bool isVerified =
                                                 await verifyPassword();
+                                            // bool isUsernameCorrect =
+                                            //     await verifyUsername();
 
                                             if (isVerified) {
+                                              // if (isUsernameCorrect) {
                                               authenticatePhoneNumber(
                                                   verifyPhoneNumberValue
                                                       .trim());
