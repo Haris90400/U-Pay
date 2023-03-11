@@ -289,7 +289,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   onChanged: (value) {
                                     setState(() {
                                       Username = value + "@upay";
-                                      verifyUsername();
                                     });
                                   },
                                 ),
@@ -336,29 +335,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       RoundedButton(
-                                          Colour: Color(0xff24B3A8),
-                                          Name: 'Submit',
-                                          onPressed: () async {
-                                            // _firestore.collection('Users').add({
-                                            //   'Balance': balance,
-                                            //   'Email': Email,
-                                            //   'Name': Name,
-                                            //   'Password': confirmPassword,
-                                            //   'Phone': userPhoneNumber,
-                                            //   'Username': Username
-                                            // });
+                                        Colour: Color(0xff24B3A8),
+                                        Name: 'Submit',
+                                        onPressed: () async {
+                                          if (verifyUsername()) {
                                             bool isVerified =
                                                 await verifyPassword();
-                                            // bool isUsernameCorrect =
-                                            //     await verifyUsername();
 
                                             if (isVerified) {
-                                              // if (isUsernameCorrect) {
                                               authenticatePhoneNumber(
                                                   verifyPhoneNumberValue
                                                       .trim());
+                                              // }
                                             }
-                                          }),
+                                          }
+                                        },
+                                      ),
                                     ],
                                   ),
                                 )
