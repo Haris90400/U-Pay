@@ -6,6 +6,8 @@ import 'package:u_pay_app/screens/home_page.dart';
 import 'package:u_pay_app/screens/otp_screen.dart';
 import 'package:u_pay_app/screens/welcome_screen.dart';
 
+import 'home.dart';
+
 class AddAccount extends StatefulWidget {
   const AddAccount({Key? key}) : super(key: key);
 
@@ -104,7 +106,7 @@ class _AddAccountState extends State<AddAccount> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 60.0),
+                padding: EdgeInsets.only(top: 20.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -115,25 +117,26 @@ class _AddAccountState extends State<AddAccount> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomePage()));
+                                  builder: (context) => Home(userName: '', userBalance: 0,)));
                         },
                         child: CircleAvatar(
                           child: Icon(
                             Icons.arrow_back,
                             size: 40.0,
+                            color: Colors.white,
                           ),
-                          backgroundColor: Colors.white,
+                          backgroundColor: Color(0xff24B3A8),
                           radius: 25.0,
                         ),
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(left: 80.0),
+                      padding: EdgeInsets.only(left: 55.0),
                       child: Hero(
                         tag: 'logo',
                         child: Image.asset(
-                          'images/upayy.png',
-                          height: 100.0,
+                          'images/logo1.png',
+                          height: 170.0,
                         ),
                       ),
                     ),
@@ -141,7 +144,7 @@ class _AddAccountState extends State<AddAccount> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(30.0, 20.0, 50.0, 10.0),
+                padding: EdgeInsets.fromLTRB(50.0, 0.0, 50.0, 0.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

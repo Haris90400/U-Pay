@@ -31,13 +31,13 @@ class WelcomeScreen extends StatelessWidget {
                 child: Hero(
                   tag: 'logo',
                   child: Image.asset(
-                    'images/upayy.png',
-                    height: 160.0,
+                    'images/logo1.png',
+                    height: 220.0,
                   ),
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(top: 50.0),
+                padding: EdgeInsets.only(top: 20.0),
                 child: TypewriterAnimatedTextKit(
                   text: ['Welcome to U-PAY'],
                   textStyle: TextStyle(

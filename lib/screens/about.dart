@@ -11,17 +11,17 @@ class AboutPage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Image.asset(
-                'images/upayy.png',
-                height: 150,
+                'images/logo1.png',
+                height: 220,
               ),
               SizedBox(
-                height: 20,
+                height: 0,
               ),
               Center(
                 child: Text(

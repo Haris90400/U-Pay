@@ -95,7 +95,7 @@ class _PayUpiState extends State<PayUpi> {
                               subtitle: Row(
                                 children: [
                                   Image.asset(
-                                    'images/bhim.ico',
+                                    'images/bhim.png',
                                     width: 20.0,
                                     height: 20.0,
                                   ),

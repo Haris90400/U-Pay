@@ -14,7 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-        Duration(seconds:5),
+        Duration(seconds:4),
         () => Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => WelcomeScreen())));
   }
@@ -32,12 +32,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
           child: Container(
 
-            height: 220,
+            height: 250,
             alignment: Alignment.center,
 
             child:Hero(
               tag: 'logo',
-              child: Image.asset('images/upayy.png')
+              child: Image.asset('images/logo1.png')
             ),
 
           ),

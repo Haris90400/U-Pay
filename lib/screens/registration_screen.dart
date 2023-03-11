@@ -124,12 +124,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 60.0),
+                    padding: EdgeInsets.only(top: 10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
+                          padding: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 0.0),
                           child: GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -141,27 +141,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               child: Icon(
                                 Icons.arrow_back,
                                 size: 40.0,
+                                color: Colors.white,
                               ),
-                              backgroundColor: Colors.white,
+                              backgroundColor: Color(0xff24B3A8),
                               radius: 25.0,
                             ),
                           ),
                         ),
+
                         Container(
-                          padding: EdgeInsets.only(left: 80.0),
+                          padding: EdgeInsets.only(left: 50),
                           child: Hero(
                             tag: 'logo',
                             child: Image.asset(
-                              'images/upayy.png',
-                              height: 100.0,
+                              'images/logo1.png',
+                              height: 170.0,
                             ),
                           ),
                         ),
+
                       ],
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(50.0, 20.0, 50.0, 10.0),
+                    padding: EdgeInsets.fromLTRB(50.0, 00.0, 50.0, 0.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -292,15 +295,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   },
                                 ),
                                 SizedBox(
-                                  height: 15.0,
+                                  height: 10.0,
                                 ),
                                 Text(
                                   password_message,
                                   style: TextStyle(color: Colors.red),
                                 ),
-                                SizedBox(
-                                  height: 35.0,
-                                ),
+
                                 Container(
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

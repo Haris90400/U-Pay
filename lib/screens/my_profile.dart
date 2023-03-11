@@ -69,64 +69,10 @@ class MyProfile extends StatelessWidget {
               ],
             ),
             SizedBox(
-              height: 50,
+              height: 450,
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 30.0),
-              child: Container(
-                width: double.infinity,
-                child: Stack(
-                  children: [
-                    Image.asset(
-                      'images/wallet.png',
-                      height: 300,
-                      fit: BoxFit.fitWidth,
-                    ),
-                    Positioned(
-                      top: 80,
-                      left: 27,
-                      child: Text(
-                        'U-Pay Balance',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 35,
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black,
-                              blurRadius: 5,
-                              offset: Offset(2, 2),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 35.0,
-                      left: 80.0,
-                      child: Text(
-                        '₹ 500',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black,
-                              blurRadius: 5,
-                              offset: Offset(2, 2),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 40.0,
-            ),
+
+
             RoundedButton(
                 Colour: Colors.black,
                 Name: 'Sign Out',

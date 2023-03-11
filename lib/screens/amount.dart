@@ -31,9 +31,11 @@ class Amount extends StatelessWidget {
                 child: CircleAvatar(
                   child: CircleAvatar(
                     backgroundColor: Colors.black,
+                    radius: 33,
                     child: Text(
                       headerfirstname!,
-                      style: TextStyle(fontSize: 25.0),
+                      style: TextStyle(fontSize: 35.0,color: Colors.white),
+
                     ),
                   ),
                   foregroundColor: Colors.white,

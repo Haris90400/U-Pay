@@ -89,22 +89,22 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 60.0),
+                    padding: EdgeInsets.only(top: 20.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Hero(
                           tag: 'logo',
                           child: Image.asset(
-                            'images/upayy.png',
-                            height: 120.0,
+                            'images/logo1.png',
+                            height: 170.0,
                           ),
                         ),
                       ],
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(50.0, 20.0, 50.0, 10.0),
+                    padding: EdgeInsets.fromLTRB(50.0, 0.0, 50.0, 10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
