@@ -4,6 +4,7 @@ import 'package:u_pay_app/components/input_field.dart';
 import 'package:u_pay_app/components/password_field.dart';
 import 'package:u_pay_app/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'home.dart';
 
@@ -29,14 +30,26 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       late String password = passwordController.text;
       late String email = emailController.text;
+      final _firestore = FirebaseFirestore.instance;
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      final userDoc = await _firestore
+          .collection('Users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+      final String userName = userDoc['Name'];
+      final double userBalance = userDoc['Balance'];
+
       Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-      );
+          context,
+          MaterialPageRoute(
+              builder: (context) => Home(
+                    userName: userName,
+                    userBalance: userBalance,
+                  )));
+      // );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         setState(() {

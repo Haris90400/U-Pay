@@ -45,25 +45,42 @@ class _OtpScreenState extends State<OtpScreen> {
   final _firestore = FirebaseFirestore.instance;
   void createUser() async {
     try {
-      await _auth.createUserWithEmailAndPassword(
-          email: widget.Email, password: widget.confirmPassword);
+      final UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: widget.Email,
+        password: widget.confirmPassword,
+      );
+
+      // Use the user's UID as the document ID in Firestore
+      final String uid = userCredential.user!.uid;
+
+      // Save user information to Firestore with the same UID
+      await _firestore.collection('Users').doc(uid).set({
+        'Balance': widget.balance,
+        'Email': widget.Email,
+        'Name': widget.Name,
+        'Password': widget.confirmPassword,
+        'Phone': widget.userPhoneNumber,
+        'Username': widget.Username,
+        'sentAmount': widget.sentAmount,
+        'recieveAmount': widget.recieveAmount,
+      });
+
+      final userDoc = await _firestore.collection('Users').doc(uid).get();
+      final String userName = userDoc['Name'];
+      final double userBalance = userDoc['Balance'];
+
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Home(
+                    userName: userName,
+                    userBalance: userBalance,
+                  )));
     } catch (e) {
       print('Error creating user: $e');
       // Show an error message
     }
-  }
-
-  void saveUser() async {
-    await _firestore.collection('Users').add({
-      'Balance': widget.balance,
-      'Email': widget.Email,
-      'Name': widget.Name,
-      'Password': widget.confirmPassword,
-      'Phone': widget.userPhoneNumber,
-      'Username': widget.Username,
-      'sentAmount': widget.sentAmount,
-      'recieveAmount': widget.recieveAmount
-    });
   }
 
   @override
@@ -102,10 +119,6 @@ class _OtpScreenState extends State<OtpScreen> {
 
                 if (isVerified) {
                   createUser();
-                  saveUser();
-
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Home()));
                 } else {
                   // Show an error message
                   showDialog(

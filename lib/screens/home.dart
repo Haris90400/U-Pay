@@ -15,7 +15,10 @@ import '../components/rounded_button.dart';
 import 'my_profile.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final String userName;
+  final double userBalance;
+
+  Home({required this.userName, required this.userBalance});
 
   @override
   State<Home> createState() => _HomeState();
@@ -29,7 +32,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff008080),
-        title: Text("Upay"),
+        title: Text('Welcome' + " " + '${widget.userName}'),
         actions: [
           Padding(
             padding: EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0),
@@ -125,7 +128,7 @@ class _HomeState extends State<Home> {
                                   ),
                                   Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         GestureDetector(
                                           onTap: () {
@@ -137,7 +140,7 @@ class _HomeState extends State<Home> {
                                           },
                                           child: Column(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                                MainAxisAlignment.start,
                                             children: [
                                               CircleAvatar(
                                                 child: Icon(
@@ -146,7 +149,7 @@ class _HomeState extends State<Home> {
                                                 ),
                                                 foregroundColor: Colors.white,
                                                 backgroundColor:
-                                                Color(0xff008080),
+                                                    Color(0xff008080),
                                                 radius: 25.0,
                                               ),
                                               Text(
@@ -167,7 +170,7 @@ class _HomeState extends State<Home> {
                                             },
                                             child: Column(
                                               mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 CircleAvatar(
                                                   child: Icon(
@@ -176,7 +179,7 @@ class _HomeState extends State<Home> {
                                                     size: 50.0,
                                                   ),
                                                   backgroundColor:
-                                                  Color(0xff008080),
+                                                      Color(0xff008080),
                                                   foregroundColor: Colors.white,
                                                   radius: 25.0,
                                                 ),
@@ -197,7 +200,7 @@ class _HomeState extends State<Home> {
                                             },
                                             child: Column(
                                               mainAxisAlignment:
-                                              MainAxisAlignment.end,
+                                                  MainAxisAlignment.end,
                                               children: [
                                                 CircleAvatar(
                                                   child: Icon(
@@ -205,7 +208,7 @@ class _HomeState extends State<Home> {
                                                     size: 50.0,
                                                   ),
                                                   backgroundColor:
-                                                  Color(0xff008080),
+                                                      Color(0xff008080),
                                                   foregroundColor: Colors.white,
                                                   radius: 25.0,
                                                 ),
@@ -246,7 +249,7 @@ class _HomeState extends State<Home> {
                                   ),
                                   Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         GestureDetector(
                                             onTap: () {
@@ -258,7 +261,7 @@ class _HomeState extends State<Home> {
                                             },
                                             child: Column(
                                               mainAxisAlignment:
-                                              MainAxisAlignment.start,
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 CircleAvatar(
                                                   child: Icon(
@@ -277,7 +280,6 @@ class _HomeState extends State<Home> {
                                                 )
                                               ],
                                             )),
-
                                         GestureDetector(
                                             onTap: () {
                                               Navigator.push(
@@ -288,7 +290,7 @@ class _HomeState extends State<Home> {
                                             },
                                             child: Column(
                                               mainAxisAlignment:
-                                              MainAxisAlignment.end,
+                                                  MainAxisAlignment.end,
                                               children: [
                                                 CircleAvatar(
                                                   child: Icon(
@@ -309,11 +311,9 @@ class _HomeState extends State<Home> {
                                       ]),
                                 ],
                               ),
-
                             ),
                             SizedBox(
                               height: 20,
-
                             ),
                             Divider(
                               color: Colors.black,
@@ -321,7 +321,6 @@ class _HomeState extends State<Home> {
                             SizedBox(
                               height: 5,
                             ),
-
                             Column(
                               children: [
                                 GestureDetector(
@@ -334,7 +333,7 @@ class _HomeState extends State<Home> {
                                     },
                                     child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                          MainAxisAlignment.spaceAround,
                                       children: [
                                         CircleAvatar(
                                           child: Icon(
@@ -373,7 +372,7 @@ class _HomeState extends State<Home> {
                                     },
                                     child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                          MainAxisAlignment.spaceAround,
                                       children: [
                                         CircleAvatar(
                                           child: Icon(
@@ -418,7 +417,6 @@ class _HomeState extends State<Home> {
                                     ))
                               ],
                             ),
-
                           ],
                         ),
                       ),

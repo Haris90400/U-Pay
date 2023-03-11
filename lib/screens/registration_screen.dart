@@ -91,9 +91,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password_message = 'Both the password must match';
       });
       return false;
-    } else if (passwordController2.text.length != 6) {
+    } else if (passwordController2.text.length <= 6) {
       setState(() {
-        password_message = 'The password must be a maximum of length 6';
+        password_message = 'The password length should be greater than 6';
       });
       return false;
     } else {
