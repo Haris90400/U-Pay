@@ -69,6 +69,8 @@ class _OtpScreenState extends State<OtpScreen> {
       final userDoc = await _firestore.collection('Users').doc(uid).get();
       final String userName = userDoc['Name'];
       final double userBalance = userDoc['Balance'];
+      final String userPhone = userDoc['Phone'];
+      final String userUserName = userDoc['Username'];
 
       Navigator.push(
           context,
@@ -76,6 +78,8 @@ class _OtpScreenState extends State<OtpScreen> {
               builder: (context) => Home(
                     userName: userName,
                     userBalance: userBalance,
+                    userPhone: userPhone,
+                    userUserName: userUserName,
                   )));
     } catch (e) {
       print('Error creating user: $e');

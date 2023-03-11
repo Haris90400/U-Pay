@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 
 class CheckBalance extends StatelessWidget {
+  final String userName;
+  final double userBalance;
+  final String userPhone;
+  final String userUserName;
+
+  CheckBalance(
+      {required this.userName,
+      required this.userBalance,
+      required this.userPhone,
+      required this.userUserName});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,22 +45,22 @@ class CheckBalance extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Pritesh Patil",
+                      userName,
                       style:
-                      TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(
                       height: 15,
                     ),
                     Text(
-                      "+91 8689987277",
+                      userPhone,
                       style: TextStyle(fontSize: 18),
                     ),
                     SizedBox(
                       height: 2,
                     ),
                     Text(
-                      "pritesh@upay",
+                      userUserName,
                       style: TextStyle(fontSize: 18),
                     ),
                   ],
@@ -85,7 +96,7 @@ class CheckBalance extends StatelessWidget {
                         height: 10,
                       ),
                       Text(
-                        "₹5000",
+                        "₹$userBalance",
                         style: TextStyle(fontSize: 18),
                       ),
                     ],

@@ -17,8 +17,14 @@ import 'my_profile.dart';
 class Home extends StatefulWidget {
   final String userName;
   final double userBalance;
+  final String userPhone;
+  final String userUserName;
 
-  Home({required this.userName, required this.userBalance});
+  Home(
+      {required this.userName,
+      required this.userBalance,
+      required this.userPhone,
+      required this.userUserName});
 
   @override
   State<Home> createState() => _HomeState();
@@ -46,7 +52,6 @@ class _HomeState extends State<Home> {
                 size: 46,
                 color: Color(0xffffffff),
               ),
-
             ),
           ),
         ],
@@ -369,7 +374,14 @@ class _HomeState extends State<Home> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  CheckBalance()));
+                                                  CheckBalance(
+                                                    userName: widget.userName,
+                                                    userBalance:
+                                                        widget.userBalance,
+                                                    userPhone: widget.userPhone,
+                                                    userUserName:
+                                                        widget.userUserName,
+                                                  )));
                                     },
                                     child: Row(
                                       mainAxisAlignment:

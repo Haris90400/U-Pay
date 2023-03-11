@@ -41,6 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
           .get();
       final String userName = userDoc['Name'];
       final double userBalance = userDoc['Balance'];
+      final String userPhone = userDoc['Phone'];
+      final String userUserName = userDoc['Username'];
 
       Navigator.pushReplacement(
           context,
@@ -48,6 +50,8 @@ class _LoginScreenState extends State<LoginScreen> {
               builder: (context) => Home(
                     userName: userName,
                     userBalance: userBalance,
+                    userPhone: userPhone,
+                    userUserName: userUserName,
                   )));
       // );
     } on FirebaseAuthException catch (e) {
