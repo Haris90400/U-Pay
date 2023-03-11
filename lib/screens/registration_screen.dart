@@ -166,11 +166,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         Container(
                           padding: EdgeInsets.only(left: 50),
-                          child: Hero(
-                            tag: 'logo',
-                            child: Image.asset(
-                              'images/logo1.png',
-                              height: 170.0,
+                          child: Center(
+                            child: Hero(
+                              tag: 'logo',
+                              child: Image.asset(
+                                'images/logo1.png',
+                                height: 170.0,
+                              ),
                             ),
                           ),
                         ),

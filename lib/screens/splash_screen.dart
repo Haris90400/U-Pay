@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:u_pay_app/screens/welcome_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -14,47 +16,34 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-        Duration(seconds:4),
+        Duration(seconds: 4),
         () => Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => WelcomeScreen())));
   }
 
   @override
   Widget build(BuildContext context) {
+    // Check if user is already logged in
+
     return Scaffold(
-      body:Container(
-        decoration: BoxDecoration(
-          color: Colors.white
-        ),
-
+      body: Container(
+        decoration: BoxDecoration(color: Colors.white),
         child: Center(
-
-
           child: Container(
-
             height: 250,
             alignment: Alignment.center,
-
-            child:Hero(
-              tag: 'logo',
-              child: Image.asset('images/logo1.png')
-            ),
-
+            child: Hero(tag: 'logo', child: Image.asset('images/logo1.png')),
           ),
         ),
       ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            color: Colors.white
-          ),
-          padding: EdgeInsets.fromLTRB(145.0, 0.0, 50.0, 60.0),
-         child: Text(
-           'U-Pay',
-           style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold  ),
-          ),
-
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(color: Colors.white),
+        padding: EdgeInsets.fromLTRB(145.0, 0.0, 50.0, 60.0),
+        child: Text(
+          'U-Pay',
+          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
         ),
-      );
-
+      ),
+    );
   }
 }

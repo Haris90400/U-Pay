@@ -34,6 +34,7 @@ class _OtpScreenState extends State<OtpScreen> {
   final _otpController = TextEditingController();
   late String otp = _otpController.text;
   final _auth = FirebaseAuth.instance;
+  bool is_Loading = false;
 
   Future<bool> verifyOtp(String otp) async {
     var credentials = await _auth.signInWithCredential(
@@ -90,70 +91,92 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-      child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset('images/otp_image.png'),
-            Text(
-              'Enter OTP send to ${widget.userPhoneNumber}',
-              style: TextStyle(fontSize: 20),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-              child: TextField(
-                controller: _otpController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                    hintText: 'OTP',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black, width: 2),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset('images/otpimage.png'),
+                  Text(
+                    'Enter OTP send to ${widget.userPhoneNumber}',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                    child: TextField(
+                      controller: _otpController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          hintText: 'OTP',
+                          border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 2),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.grey, width: 2),
+                          )),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 2),
-                    )),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      setState(() {
+                        is_Loading = true;
+                      });
+                      String enteredOtp = _otpController.text;
+                      bool isVerified = await verifyOtp(enteredOtp);
+                      print(isVerified);
+
+                      if (isVerified) {
+                        createUser();
+                        setState(() {
+                          is_Loading = true;
+                        });
+                      } else {
+                        // Show an error message
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Invalid OTP"),
+                              content: Text("Please enter a valid OTP."),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text("OK"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                )
+                              ],
+                            );
+                          },
+                        );
+                        setState(() {
+                          is_Loading = false;
+                        });
+                      }
+
+                      // perform action to verify OTP
+                      // for example:
+
+                      // if OTP is verified, navigate to next page
+                    },
+                    child: Text('Verify'),
+                  ),
+                ],
               ),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                String enteredOtp = _otpController.text;
-                bool isVerified = await verifyOtp(enteredOtp);
-                print(isVerified);
-
-                if (isVerified) {
-                  createUser();
-                } else {
-                  // Show an error message
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("Invalid OTP"),
-                        content: Text("Please enter a valid OTP."),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text("OK"),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          )
-                        ],
-                      );
-                    },
-                  );
-                }
-
-                // perform action to verify OTP
-                // for example:
-
-                // if OTP is verified, navigate to next page
-              },
-              child: Text('Verify'),
+          ),
+          if (is_Loading) // Show the CircularProgressIndicator if loading
+            Positioned.fill(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
             ),
-          ],
-        ),
+        ],
       ),
-    ));
+    );
   }
 }

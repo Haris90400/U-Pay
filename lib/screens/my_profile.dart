@@ -71,8 +71,6 @@ class MyProfile extends StatelessWidget {
             SizedBox(
               height: 450,
             ),
-
-
             RoundedButton(
                 Colour: Colors.black,
                 Name: 'Sign Out',
