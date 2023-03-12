@@ -100,7 +100,7 @@ class _PayContactState extends State<PayContact> {
                                   MaterialPageRoute(
                                     builder: (context) => Payment(
                                         username: data?['Name'],
-                                        UpayId: data?['Phone'],
+                                        UpayIdorPhone: data?['Phone'],
                                         firstNameString: data?['Name']
                                                 ?.substring(0, 1)
                                                 ?.toUpperCase() ??

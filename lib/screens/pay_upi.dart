@@ -109,7 +109,7 @@ class _PayUpiState extends State<PayUpi> {
                                   MaterialPageRoute(
                                     builder: (context) => Payment(
                                         username: data?['Name'],
-                                        UpayId: data?['Username'],
+                                        UpayIdorPhone: data?['Username'],
                                         firstNameString: data?['Name']
                                                 ?.substring(0, 1)
                                                 ?.toUpperCase() ??
