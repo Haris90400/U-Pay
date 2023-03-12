@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'set_pin.dart';
 
 class OtpScreen extends StatefulWidget {
   final String userPhoneNumber;
@@ -12,7 +13,6 @@ class OtpScreen extends StatefulWidget {
   final double balance;
   final double sentAmount;
   final double recieveAmount;
-
   final String verificationId;
 
   OtpScreen(
@@ -72,16 +72,34 @@ class _OtpScreenState extends State<OtpScreen> {
       final double userBalance = userDoc['Balance'];
       final String userPhone = userDoc['Phone'];
       final String userUserName = userDoc['Username'];
+      final String userEmail = userDoc['Email'];
+      final double sentAmount = userDoc['sentAmount'];
+      final double recieveAmount = userDoc['recieveAmount'];
+      print('User uid:$uid');
 
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Home(
-                    userName: userName,
-                    userBalance: userBalance,
-                    userPhone: userPhone,
-                    userUserName: userUserName,
-                  )));
+      // Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) => Home(
+      //               userName: userName,
+      //               userBalance: userBalance,
+      //               userPhone: userPhone,
+      //               userUserName: userUserName,
+      //             )));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => otpWidget(
+                  userPhoneNumber: userPhone,
+                  Name: userName,
+                  balance: userBalance,
+                  Username: userUserName,
+                  Email: userEmail,
+                  uid: uid,
+                  sentAmount: sentAmount,
+                  recieveAmount: recieveAmount,
+                )),
+      );
     } catch (e) {
       print('Error creating user: $e');
       // Show an error message
