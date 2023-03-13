@@ -382,11 +382,10 @@ class _HomeState extends State<Home> {
                                               builder: (context) =>
                                                   CheckBalance(
                                                     userName: widget.userName,
-                                                    userBalance:
-                                                        widget.userBalance,
                                                     userPhone: widget.userPhone,
                                                     userUserName:
                                                         widget.userUserName,
+                                                    uid: widget.uid,
                                                   )));
                                     },
                                     child: Row(

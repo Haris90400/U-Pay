@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class CheckBalance extends StatelessWidget {
+class CheckBalance extends StatefulWidget {
   final String userName;
-  final double userBalance;
   final String userPhone;
   final String userUserName;
+  final String uid;
 
   CheckBalance(
       {required this.userName,
-      required this.userBalance,
       required this.userPhone,
-      required this.userUserName});
+      required this.userUserName,
+      required this.uid});
+
+  @override
+  _CheckBalanceState createState() => _CheckBalanceState();
+}
+
+class _CheckBalanceState extends State<CheckBalance> {
+  double? userBalance;
+  bool _isBalanceFetched = false;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +54,7 @@ class CheckBalance extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      userName,
+                      widget.userName,
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
@@ -53,14 +62,14 @@ class CheckBalance extends StatelessWidget {
                       height: 15,
                     ),
                     Text(
-                      userPhone,
+                      widget.userPhone,
                       style: TextStyle(fontSize: 18),
                     ),
                     SizedBox(
                       height: 2,
                     ),
                     Text(
-                      userUserName,
+                      widget.userUserName,
                       style: TextStyle(fontSize: 18),
                     ),
                   ],
@@ -95,10 +104,27 @@ class CheckBalance extends StatelessWidget {
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        "₹$userBalance",
-                        style: TextStyle(fontSize: 18),
-                      ),
+                      if (_isBalanceFetched)
+                        Text(
+                          "₹$userBalance",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      if (!_isBalanceFetched)
+                        ElevatedButton(
+                          onPressed: () async {
+                            final snapshot = await FirebaseFirestore.instance
+                                .collection('Users')
+                                .doc(widget.uid)
+                                .get();
+                            if (snapshot.exists) {
+                              setState(() {
+                                userBalance = snapshot.data()!['Balance'];
+                                _isBalanceFetched = true;
+                              });
+                            }
+                          },
+                          child: Text("Check Balance"),
+                        ),
                     ],
                   ),
                 ],
