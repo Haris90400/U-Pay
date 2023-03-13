@@ -35,7 +35,7 @@ class _otpWidgetState extends State<otpWidget> {
     return currentBalance;
   }
 
-  //Function to get Balance of reciever
+  //Function to get Balance of reciever using username
   Future<double?> getBalanceByUsername(String username) async {
     final CollectionReference users =
         FirebaseFirestore.instance.collection('Users');
@@ -49,11 +49,36 @@ class _otpWidgetState extends State<otpWidget> {
       return null;
     }
   }
+
+  //Function to get Balance of reciever using phone
+  Future<double?> getBalanceByPhone(String phone) async {
+    final CollectionReference users =
+        FirebaseFirestore.instance.collection('Users');
+    final QuerySnapshot snapshot =
+        await users.where('Phone', isEqualTo: phone).get();
+    if (snapshot.size > 0) {
+      final DocumentSnapshot userDoc = snapshot.docs[0];
+      final double balance = userDoc['Balance'];
+      return balance;
+    } else {
+      return null;
+    }
+  }
   //Function To update Users Balance
 
   Future<void> updateBalance() async {
     double currentBalance = await getBalance(widget.uid);
-    double? recieverBalance = await getBalanceByUsername(widget.phoneOrUpay);
+    double? recieverBalance = 0.0;
+
+    //To check if the selected payment mode is phone or username
+    if (widget.phoneOrUpay.contains('+91')) {
+      recieverBalance = await getBalanceByPhone(widget.phoneOrUpay);
+      print(recieverBalance);
+    } else {
+      recieverBalance = await getBalanceByUsername(widget.phoneOrUpay);
+      print(recieverBalance);
+    }
+
     double transferAmount = widget.transferAmount;
 
     if (currentBalance < transferAmount) {
@@ -66,14 +91,25 @@ class _otpWidgetState extends State<otpWidget> {
     // If the receiver's balance is not null, add transfer amount to their balance
     if (recieverBalance != null) {
       recieverBalance += transferAmount;
+
       // Update receiver's balance in Firestore
-      await FirebaseFirestore.instance
-          .collection('Users')
-          .where('Username', isEqualTo: widget.phoneOrUpay)
-          .get()
-          .then((snapshot) {
-        snapshot.docs.first.reference.update({'Balance': recieverBalance});
-      });
+      if (widget.phoneOrUpay.contains('+91')) {
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .where('Phone', isEqualTo: widget.phoneOrUpay)
+            .get()
+            .then((snapshot) {
+          snapshot.docs.first.reference.update({'Balance': recieverBalance});
+        });
+      } else {
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .where('Username', isEqualTo: widget.phoneOrUpay)
+            .get()
+            .then((snapshot) {
+          snapshot.docs.first.reference.update({'Balance': recieverBalance});
+        });
+      }
     }
     // Update current user's balance in Firestore
     await FirebaseFirestore.instance
