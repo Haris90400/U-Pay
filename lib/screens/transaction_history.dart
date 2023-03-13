@@ -12,17 +12,7 @@ class transctionHistory extends StatelessWidget {
         ),
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-          children: [
-            sendMessageBubble(
-              reciever: 'Haris',
-              Amount: '50',
-            ),
-            sendMessageBubble(reciever: 'Pritesh', Amount: '50'),
-            recieverMessageBubble(sender: 'Harsh', Amount: '69'),
-            recieverMessageBubble(sender: 'Harsh', Amount: '69'),
-            sendMessageBubble(reciever: 'Pandey', Amount: '10'),
-            recieverMessageBubble(sender: 'Haris', Amount: '500'),
-          ],
+          children: [],
         ));
   }
 }
