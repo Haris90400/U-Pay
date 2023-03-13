@@ -10,11 +10,15 @@ class Amount extends StatelessWidget {
   late String amount;
   late String? username;
   late String? headerfirstname;
+  final String uid;
+  late double transferAmount;
+  TextEditingController transferAmountController = TextEditingController();
 
   Amount(
       {required this.UPIorPhone,
       required this.username,
-      required this.headerfirstname});
+      required this.headerfirstname,
+      required this.uid});
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +38,7 @@ class Amount extends StatelessWidget {
                     radius: 33,
                     child: Text(
                       headerfirstname!,
-                      style: TextStyle(fontSize: 35.0,color: Colors.white),
-
+                      style: TextStyle(fontSize: 35.0, color: Colors.white),
                     ),
                   ),
                   foregroundColor: Colors.white,
@@ -60,6 +63,7 @@ class Amount extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.fromLTRB(130.0, 10.0, 110.0, 0.0),
                 child: TextField(
+                  controller: transferAmountController,
                   style: TextStyle(fontSize: 50),
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
@@ -84,8 +88,15 @@ class Amount extends StatelessWidget {
             Colour: Color(0xff24B3A8),
             Name: 'Pay',
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => otpWidget()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => otpWidget(
+                            uid: uid,
+                            phoneOrUpay: UPIorPhone!,
+                            transferAmount:
+                                double.parse(transferAmountController.text),
+                          )));
             }),
       ),
     );

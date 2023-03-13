@@ -19,12 +19,14 @@ class Home extends StatefulWidget {
   final double userBalance;
   final String userPhone;
   final String userUserName;
+  final String uid;
 
   Home(
       {required this.userName,
       required this.userBalance,
       required this.userPhone,
-      required this.userUserName});
+      required this.userUserName,
+      required this.uid});
 
   @override
   State<Home> createState() => _HomeState();
@@ -198,11 +200,11 @@ class _HomeState extends State<Home> {
                                             )),
                                         GestureDetector(
                                             onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          PayUpi()));
+                                              // Navigator.push(
+                                              //     context,
+                                              //     MaterialPageRoute(
+                                              //         builder: (context) =>
+                                              //             PayUpi()));
                                             },
                                             child: Column(
                                               mainAxisAlignment:
@@ -263,7 +265,9 @@ class _HomeState extends State<Home> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          PayUpi()));
+                                                          PayUpi(
+                                                            uid: widget.uid,
+                                                          )));
                                             },
                                             child: Column(
                                               mainAxisAlignment:
@@ -292,7 +296,9 @@ class _HomeState extends State<Home> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          PayContact()));
+                                                          PayContact(
+                                                            uid: widget.uid,
+                                                          )));
                                             },
                                             child: Column(
                                               mainAxisAlignment:

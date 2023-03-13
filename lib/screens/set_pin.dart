@@ -129,10 +129,12 @@ class _otpWidgetState extends State<otpWidget> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => Home(
-                                userName: widget.Name,
-                                userBalance: widget.balance,
-                                userPhone: widget.userPhoneNumber,
-                                userUserName: widget.Username)));
+                                  userName: widget.Name,
+                                  userBalance: widget.balance,
+                                  userPhone: widget.userPhoneNumber,
+                                  userUserName: widget.Username,
+                                  uid: widget.uid,
+                                )));
                   },
                 ),
               )

@@ -11,11 +11,13 @@ class Payment extends StatelessWidget {
   final String? username;
   final String? UpayIdorPhone;
   final String? firstNameString;
+  final String uid;
 
   Payment(
       {required this.username,
       required this.UpayIdorPhone,
-      required this.firstNameString});
+      required this.firstNameString,
+      required this.uid});
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +67,11 @@ class Payment extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) => Amount(
-                          username: username,
-                          UPIorPhone: UpayIdorPhone,
-                          headerfirstname: firstNameString)));
+                            username: username,
+                            UPIorPhone: UpayIdorPhone,
+                            headerfirstname: firstNameString,
+                            uid: uid,
+                          )));
             }),
       ),
     );

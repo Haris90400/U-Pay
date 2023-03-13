@@ -5,7 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:u_pay_app/constants.dart';
 
 class PayUpi extends StatefulWidget {
-  const PayUpi({Key? key}) : super(key: key);
+  final String uid;
+  PayUpi({required this.uid});
 
   @override
   State<PayUpi> createState() => _PayUpiState();
@@ -108,12 +109,14 @@ class _PayUpiState extends State<PayUpi> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => Payment(
-                                        username: data?['Name'],
-                                        UpayIdorPhone: data?['Username'],
-                                        firstNameString: data?['Name']
-                                                ?.substring(0, 1)
-                                                ?.toUpperCase() ??
-                                            ''),
+                                      username: data?['Name'],
+                                      UpayIdorPhone: data?['Username'],
+                                      firstNameString: data?['Name']
+                                              ?.substring(0, 1)
+                                              ?.toUpperCase() ??
+                                          '',
+                                      uid: widget.uid,
+                                    ),
                                   ),
                                 );
                               },

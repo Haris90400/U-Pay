@@ -5,7 +5,8 @@ import 'package:u_pay_app/screens/payment.dart';
 import 'package:u_pay_app/constants.dart';
 
 class PayContact extends StatefulWidget {
-  const PayContact({Key? key}) : super(key: key);
+  final String uid;
+  PayContact({required this.uid});
 
   @override
   State<PayContact> createState() => _PayContactState();
@@ -99,12 +100,14 @@ class _PayContactState extends State<PayContact> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => Payment(
-                                        username: data?['Name'],
-                                        UpayIdorPhone: data?['Phone'],
-                                        firstNameString: data?['Name']
-                                                ?.substring(0, 1)
-                                                ?.toUpperCase() ??
-                                            ''),
+                                      username: data?['Name'],
+                                      UpayIdorPhone: data?['Phone'],
+                                      firstNameString: data?['Name']
+                                              ?.substring(0, 1)
+                                              ?.toUpperCase() ??
+                                          '',
+                                      uid: widget.uid,
+                                    ),
                                   ),
                                 );
                               },

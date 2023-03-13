@@ -193,11 +193,11 @@ class HomePage extends StatelessWidget {
                                       children: [
                                         GestureDetector(
                                             onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          PayUpi()));
+                                              // Navigator.push(
+                                              //     context,
+                                              //     MaterialPageRoute(
+                                              //         builder: (context) =>
+                                              //             PayUpi()));
                                             },
                                             child: Column(
                                               children: [
@@ -246,11 +246,11 @@ class HomePage extends StatelessWidget {
                                             )),
                                         GestureDetector(
                                             onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          PayContact()));
+                                              // Navigator.push(
+                                              //     context,
+                                              //     MaterialPageRoute(
+                                              //         builder: (context) =>
+                                              //             PayContact(uid: ,)));
                                             },
                                             child: Column(
                                               children: [

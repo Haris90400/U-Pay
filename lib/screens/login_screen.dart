@@ -39,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
           .collection('Users')
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
+      final String uid = FirebaseAuth.instance.currentUser!.uid;
       final String userName = userDoc['Name'];
       final double userBalance = userDoc['Balance'];
       final String userPhone = userDoc['Phone'];
@@ -52,6 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     userBalance: userBalance,
                     userPhone: userPhone,
                     userUserName: userUserName,
+                    uid: uid,
                   )));
       // );
     } on FirebaseAuthException catch (e) {

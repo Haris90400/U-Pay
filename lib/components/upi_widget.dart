@@ -1,13 +1,90 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:u_pay_app/screens/payment_confirmation.dart';
 
 class otpWidget extends StatefulWidget {
+  final double transferAmount;
+  final String phoneOrUpay;
+  final String uid;
+  otpWidget(
+      {required this.transferAmount,
+      required this.phoneOrUpay,
+      required this.uid});
   @override
   State<otpWidget> createState() => _otpWidgetState();
 }
 
 class _otpWidgetState extends State<otpWidget> {
+  //Function to get the logged in user U-PAY Pin
+  Future<String> getUpayPin(String uid) async {
+    final CollectionReference users =
+        FirebaseFirestore.instance.collection('Users');
+    final DocumentSnapshot userDoc = await users.doc(uid).get();
+    final String upiPin = userDoc.get('upiPin');
+    return upiPin;
+  }
+
+  //Function to get the logged in user Balance
+  Future<double> getBalance(String uid) async {
+    final CollectionReference users =
+        FirebaseFirestore.instance.collection('Users');
+    final DocumentSnapshot userDoc = await users.doc(uid).get();
+    final double currentBalance = userDoc.get('Balance');
+    return currentBalance;
+  }
+
+  //Function to get Balance of reciever
+  Future<double?> getBalanceByUsername(String username) async {
+    final CollectionReference users =
+        FirebaseFirestore.instance.collection('Users');
+    final QuerySnapshot snapshot =
+        await users.where('Username', isEqualTo: username).get();
+    if (snapshot.size > 0) {
+      final DocumentSnapshot userDoc = snapshot.docs[0];
+      final double balance = userDoc['Balance'];
+      return balance;
+    } else {
+      return null;
+    }
+  }
+  //Function To update Users Balance
+
+  Future<void> updateBalance() async {
+    double currentBalance = await getBalance(widget.uid);
+    double? recieverBalance = await getBalanceByUsername(widget.phoneOrUpay);
+    double transferAmount = widget.transferAmount;
+
+    if (currentBalance < transferAmount) {
+      // Show error message and return if user has insufficient balance
+      return;
+    }
+    //Deduct the money from the logged in user
+    currentBalance -= transferAmount;
+
+    // If the receiver's balance is not null, add transfer amount to their balance
+    if (recieverBalance != null) {
+      recieverBalance += transferAmount;
+      // Update receiver's balance in Firestore
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .where('Username', isEqualTo: widget.phoneOrUpay)
+          .get()
+          .then((snapshot) {
+        snapshot.docs.first.reference.update({'Balance': recieverBalance});
+      });
+    }
+    // Update current user's balance in Firestore
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(widget.uid)
+        .update({'Balance': currentBalance});
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => PaymentConformationScreen()));
+  }
+
+  late String error_message = '';
   final List<TextEditingController> controllers =
       List.generate(6, (_) => TextEditingController());
 
@@ -16,6 +93,27 @@ class _otpWidgetState extends State<otpWidget> {
 
   @override
   Widget build(BuildContext context) {
+    String enteredUpayPin =
+        controllers.map((controller) => controller.text).join();
+
+    //Function to verify upayPin
+    Future<bool> verifyUpayPin() async {
+      String upayPin = await getUpayPin(widget.uid);
+      // print(upayPin);
+      print(enteredUpayPin);
+      if (enteredUpayPin == upayPin) {
+        setState(() {
+          error_message = '';
+        });
+        return true;
+      } else {
+        setState(() {
+          error_message = 'Please enter correct U-Pay Pin';
+        });
+        return false;
+      }
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -33,6 +131,13 @@ class _otpWidgetState extends State<otpWidget> {
               Text(
                 'Enter 6 digit U-PAY Pin',
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              Text(
+                error_message,
+                style: TextStyle(color: Colors.red),
               ),
               SizedBox(
                 height: 30.0,
@@ -98,10 +203,13 @@ class _otpWidgetState extends State<otpWidget> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xff24B3A8)),
                   child: Text('Submit'),
-                  onPressed: () {
+                  onPressed: () async {
                     String pin = '';
                     controllers.forEach((element) => pin += element.text);
-                    print('UPI pin:$pin');
+                    bool isVerified = await verifyUpayPin();
+                    if (isVerified) {
+                      updateBalance();
+                    }
                   },
                 ),
               )
