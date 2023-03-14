@@ -23,6 +23,7 @@ class _transactionnHistoryState extends State<transactionnHistory> {
           stream: _firestore
               .collection('Transactions')
               .where('uid', isEqualTo: widget.uid)
+              .orderBy('timestamp', descending: false)
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
@@ -33,10 +34,7 @@ class _transactionnHistoryState extends State<transactionnHistory> {
             }
             if (snapshot.data!.docs.isEmpty) {
               // If there are no search results, display a message
-              return Center(
-                child: Text(
-                    'No Transactions Found . Do your first transaction and get assured rewards'),
-              );
+
             }
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
@@ -44,15 +42,22 @@ class _transactionnHistoryState extends State<transactionnHistory> {
                 final data =
                     snapshot.data!.docs[index].data() as Map<String, dynamic>;
                 final String transactionType = data?['Type'];
-                if (transactionType != null &&
-                    transactionType.contains('Paid')) {
-                  return sendMessageBubble(
-                      reciever: data?['Name'] ?? '',
-                      Amount: data?['Amount'] ?? '');
-                } else {
+                if (transactionType.contains('Recieved')) {
                   return recieverMessageBubble(
-                      sender: data?['Name'] ?? '',
-                      Amount: data?['Amount'] ?? '');
+                    sender: data?['Name'] ?? '',
+                    Amount: data?['Amount'] ?? '',
+                  );
+                } else if (transactionType.contains('Paid')) {
+                  return sendMessageBubble(
+                    reciever: data?['Name'] ?? '',
+                    Amount: data?['Amount'] ?? '',
+                  );
+                } else {
+                  return Center(
+                    child: Text(
+                      'No Transactions Found. Do your first transaction and get assured rewards',
+                    ),
+                  );
                 }
               },
             );

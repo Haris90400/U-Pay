@@ -128,12 +128,22 @@ class _otpWidgetState extends State<otpWidget> {
   Future<void> updateTransactionHistory() async {
     final String senderUID = widget.uid;
 
-    //Retrieving reciever UID
+    // Retrieving reciever UID
     final CollectionReference usersCollection =
         FirebaseFirestore.instance.collection('Users');
-    final QuerySnapshot usernameQuerySnapshot = await usersCollection
-        .where('Username', isEqualTo: widget.phoneOrUpay)
-        .get();
+
+    QuerySnapshot usernameQuerySnapshot;
+
+    if (widget.phoneOrUpay.contains('@')) {
+      usernameQuerySnapshot = await usersCollection
+          .where('Username', isEqualTo: widget.phoneOrUpay)
+          .get();
+    } else {
+      usernameQuerySnapshot = await usersCollection
+          .where('Phone', isEqualTo: widget.phoneOrUpay)
+          .get();
+    }
+
     final DocumentSnapshot? userDocumentSnapshot =
         usernameQuerySnapshot.docs.first;
     final String? recieverUID = userDocumentSnapshot?.id;
@@ -163,7 +173,8 @@ class _otpWidgetState extends State<otpWidget> {
           recieverUID, //setting the reciever uid to uniquely identify transactions for that user
       'Amount': widget.transferAmount,
       'Type': 'Recieved From',
-      'Name': Sendername
+      'Name': Sendername,
+      'timestamp': FieldValue.serverTimestamp()
     });
   }
 
