@@ -8,10 +8,12 @@ class otpWidget extends StatefulWidget {
   final double transferAmount;
   final String phoneOrUpay;
   final String uid;
+  final String recieverName;
   otpWidget(
       {required this.transferAmount,
       required this.phoneOrUpay,
-      required this.uid});
+      required this.uid,
+      required this.recieverName});
   @override
   State<otpWidget> createState() => _otpWidgetState();
 }
@@ -120,6 +122,49 @@ class _otpWidgetState extends State<otpWidget> {
         .update({'Balance': currentBalance});
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (context) => PaymentConformationScreen()));
+  }
+
+  //Function to update the transaction history whenever the user does a payment
+  Future<void> updateTransactionHistory() async {
+    final String senderUID = widget.uid;
+
+    //Retrieving reciever UID
+    final CollectionReference usersCollection =
+        FirebaseFirestore.instance.collection('Users');
+    final QuerySnapshot usernameQuerySnapshot = await usersCollection
+        .where('Username', isEqualTo: widget.phoneOrUpay)
+        .get();
+    final DocumentSnapshot? userDocumentSnapshot =
+        usernameQuerySnapshot.docs.first;
+    final String? recieverUID = userDocumentSnapshot?.id;
+    // print(recieverUID);
+    final _firestore = FirebaseFirestore.instance;
+
+    //Code for retrieving sender Name
+    final DocumentReference userDocRef =
+        FirebaseFirestore.instance.collection('Users').doc(widget.uid);
+    final DocumentSnapshot? NameDocumentSnapshot = await userDocRef.get();
+    final String Sendername =
+        (NameDocumentSnapshot?.data() as dynamic)!['Name'];
+
+    //Code for updating transaction History Colloection
+    //For Sender
+    await _firestore.collection('Transactions').add({
+      'uid':
+          widget.uid, //seeting the sender uid to uniquely identify transaction
+      'Amount': widget.transferAmount,
+      'Type': 'Paid To',
+      'Name': widget.recieverName,
+      'timestamp': FieldValue.serverTimestamp()
+    });
+    //For Reciever
+    await _firestore.collection('Transactions').add({
+      'uid':
+          recieverUID, //setting the reciever uid to uniquely identify transactions for that user
+      'Amount': widget.transferAmount,
+      'Type': 'Recieved From',
+      'Name': Sendername
+    });
   }
 
   late String error_message = '';
@@ -251,6 +296,7 @@ class _otpWidgetState extends State<otpWidget> {
                         if (isVerified) {
                           _isLoading = true;
                           updateBalance();
+                          updateTransactionHistory();
                         }
                       },
                     ),

@@ -92,11 +92,11 @@ class Amount extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) => otpWidget(
-                            uid: uid,
-                            phoneOrUpay: UPIorPhone!,
-                            transferAmount:
-                                double.parse(transferAmountController.text),
-                          )));
+                          uid: uid,
+                          phoneOrUpay: UPIorPhone!,
+                          transferAmount:
+                              double.parse(transferAmountController.text),
+                          recieverName: username!)));
             }),
       ),
     );

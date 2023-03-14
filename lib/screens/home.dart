@@ -341,7 +341,8 @@ class _HomeState extends State<Home> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  transctionHistory()));
+                                                  transactionnHistory(
+                                                      uid: widget.uid)));
                                     },
                                     child: Row(
                                       mainAxisAlignment:

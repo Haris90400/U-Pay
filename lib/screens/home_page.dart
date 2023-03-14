@@ -286,11 +286,11 @@ class HomePage extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                       onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    transctionHistory()));
+                                        // Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) =>
+                                        //             transctionHistory()));
                                       },
                                       child: Row(
                                         mainAxisAlignment:

@@ -49,57 +49,60 @@ class _PaymentConformationScreenState extends State<PaymentConformationScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Circular avatar with white background
-            Container(
-              height: 120,
-              width: 120,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.cyan.shade700,
-              ),
-              // Animated check icon inside the circular avatar
-              child: AnimatedBuilder(
-                animation: _controller,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: _opacityAnimation.value,
-                    child: Transform.scale(
-                      scale: _scaleAnimation.value,
-                      child: child,
-                    ),
-                  );
-                },
-                child: Icon(
-                  Icons.check,
-                  color: Colors.white,
-                  size: 50,
-                ),
-              ),
-            ),
-            // Text to show the payment confirmation
-            SizedBox(height: 20),
-            Text(
-              "Payment Confirmed",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.cyan.shade700,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Your transaction is successful",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey.shade600,
-              ),
-            ),
-          ],
-        ),
-      ),
+          child: Image(
+        image: NetworkImage(
+            'https://media.tenor.com/bm8Q6yAlsPsAAAAi/verified.gif'),
+        fit: BoxFit.cover,
+      ) // child: Column(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     // Circular avatar with white background
+          //     Container(
+          //       height: 120,
+          //       width: 120,
+          //       decoration: BoxDecoration(
+          //         shape: BoxShape.circle,
+          //         color: Colors.cyan.shade700,
+          //       ),
+          //       // Animated check icon inside the circular avatar
+          //       child: AnimatedBuilder(
+          //         animation: _controller,
+          //         builder: (context, child) {
+          //           return Opacity(
+          //             opacity: _opacityAnimation.value,
+          //             child: Transform.scale(
+          //               scale: _scaleAnimation.value,
+          //               child: child,
+          //             ),
+          //           );
+          //         },
+          //         child: Icon(
+          //           Icons.check,
+          //           color: Colors.white,
+          //           size: 50,
+          //         ),
+          //       ),
+          //     ),
+          //     // Text to show the payment confirmation
+          //     SizedBox(height: 20),
+          //     Text(
+          //       "Payment Confirmed",
+          //       style: TextStyle(
+          //         fontSize: 18,
+          //         fontWeight: FontWeight.bold,
+          //         color: Colors.cyan.shade700,
+          //       ),
+          //     ),
+          //     SizedBox(height: 10),
+          //     Text(
+          //       "Your transaction is successful",
+          //       style: TextStyle(
+          //         fontSize: 16,
+          //         color: Colors.grey.shade600,
+          //       ),
+          //     ),
+          //   ],
+          ),
     );
   }
 }

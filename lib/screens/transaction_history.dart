@@ -1,8 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class transctionHistory extends StatelessWidget {
-  const transctionHistory({Key? key}) : super(key: key);
+class transactionnHistory extends StatefulWidget {
+  final String uid;
 
+  transactionnHistory({required this.uid});
+
+  @override
+  State<transactionnHistory> createState() => _transactionnHistoryState();
+}
+
+class _transactionnHistoryState extends State<transactionnHistory> {
+  final _firestore = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,16 +19,51 @@ class transctionHistory extends StatelessWidget {
           backgroundColor: Color(0xff24B3A8),
           title: Text('Your previous transactions'),
         ),
-        body: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-          children: [],
+        body: StreamBuilder<QuerySnapshot>(
+          stream: _firestore
+              .collection('Transactions')
+              .where('uid', isEqualTo: widget.uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              // If data is not available, show a loading spinner
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.data!.docs.isEmpty) {
+              // If there are no search results, display a message
+              return Center(
+                child: Text(
+                    'No Transactions Found . Do your first transaction and get assured rewards'),
+              );
+            }
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                final data =
+                    snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                final String transactionType = data?['Type'];
+                if (transactionType != null &&
+                    transactionType.contains('Paid')) {
+                  return sendMessageBubble(
+                      reciever: data?['Name'] ?? '',
+                      Amount: data?['Amount'] ?? '');
+                } else {
+                  return recieverMessageBubble(
+                      sender: data?['Name'] ?? '',
+                      Amount: data?['Amount'] ?? '');
+                }
+              },
+            );
+          },
         ));
   }
 }
 
 class sendMessageBubble extends StatelessWidget {
   final String reciever;
-  final String Amount;
+  final double Amount;
 
   sendMessageBubble({required this.reciever, required this.Amount});
 
@@ -63,7 +107,7 @@ class sendMessageBubble extends StatelessWidget {
 
 class recieverMessageBubble extends StatelessWidget {
   final String sender;
-  final String Amount;
+  final double Amount;
 
   recieverMessageBubble({required this.sender, required this.Amount});
 
