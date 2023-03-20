@@ -86,10 +86,6 @@ class _otpWidgetState extends State<otpWidget> {
 
     double transferAmount = widget.transferAmount;
 
-    if (currentBalance < transferAmount) {
-      // Show error message and return if user has insufficient balance
-      return;
-    }
     //Deduct the money from the logged in user
     currentBalance -= transferAmount;
 
@@ -200,6 +196,23 @@ class _otpWidgetState extends State<otpWidget> {
     previousTransactionID = transactionID;
   }
 
+  //Function to verify that the entered amount is less than logged in user current balance
+  Future<bool> verifyEnteredAount() async {
+    final double loggedinUserBalance = await getBalance(widget.uid);
+    if (widget.transferAmount > loggedinUserBalance) {
+      setState(() {
+        error_message = 'Insufficient Balance';
+        _isLoading = false;
+      });
+      return false;
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      return true;
+    }
+  }
+
 // Function to send FCM notification to a specific device token
 //   FirebaseMessaging messaging = FirebaseMessaging.instance;
 //   Future<void> sendFCMNotification(
@@ -259,10 +272,12 @@ class _otpWidgetState extends State<otpWidget> {
           error_message = '';
         });
         return true;
-      } else {
+      } else if (enteredUpayPin != upayPin) {
         setState(() {
           error_message = 'Please enter correct U-Pay Pin';
         });
+        return false;
+      } else {
         return false;
       }
     }
@@ -368,10 +383,13 @@ class _otpWidgetState extends State<otpWidget> {
                         String pin = '';
                         controllers.forEach((element) => pin += element.text);
                         bool isVerified = await verifyUpayPin();
-                        if (isVerified) {
-                          _isLoading = true;
-                          updateBalance();
-                          updateTransactionHistory();
+                        bool isEneterAmountLess = await verifyEnteredAount();
+                        if (isEneterAmountLess) {
+                          if (isVerified) {
+                            _isLoading = true;
+                            updateBalance();
+                            updateTransactionHistory();
+                          }
                         }
                       },
                     ),
