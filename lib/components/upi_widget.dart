@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:u_pay_app/screens/payment_confirmation.dart';
+import 'package:uuid/uuid.dart';
 
 class otpWidget extends StatefulWidget {
   final double transferAmount;
@@ -125,15 +127,17 @@ class _otpWidgetState extends State<otpWidget> {
   }
 
   //Function to update the transaction history whenever the user does a payment
+
+  String?
+      previousTransactionID; // variable to store the previous transaction ID
+
   Future<void> updateTransactionHistory() async {
     final String senderUID = widget.uid;
 
-    // Retrieving reciever UID
+    // Retrieving receiver UID
     final CollectionReference usersCollection =
         FirebaseFirestore.instance.collection('Users');
-
     QuerySnapshot usernameQuerySnapshot;
-
     if (widget.phoneOrUpay.contains('@')) {
       usernameQuerySnapshot = await usersCollection
           .where('Username', isEqualTo: widget.phoneOrUpay)
@@ -143,40 +147,95 @@ class _otpWidgetState extends State<otpWidget> {
           .where('Phone', isEqualTo: widget.phoneOrUpay)
           .get();
     }
-
     final DocumentSnapshot? userDocumentSnapshot =
         usernameQuerySnapshot.docs.first;
-    final String? recieverUID = userDocumentSnapshot?.id;
-    // print(recieverUID);
-    final _firestore = FirebaseFirestore.instance;
+    final String? receiverUID = userDocumentSnapshot?.id;
 
-    //Code for retrieving sender Name
+    // Code for retrieving sender Name
     final DocumentReference userDocRef =
         FirebaseFirestore.instance.collection('Users').doc(widget.uid);
-    final DocumentSnapshot? NameDocumentSnapshot = await userDocRef.get();
-    final String Sendername =
-        (NameDocumentSnapshot?.data() as dynamic)!['Name'];
+    final DocumentSnapshot? nameDocumentSnapshot = await userDocRef.get();
+    final String senderName = (nameDocumentSnapshot?.data() as dynamic)['Name'];
 
-    //Code for updating transaction History Colloection
-    //For Sender
-    await _firestore.collection('Transactions').add({
-      'uid':
-          widget.uid, //seeting the sender uid to uniquely identify transaction
+    // Generating or retrieving unique transaction ID
+    String transactionID;
+    if (previousTransactionID != null) {
+      transactionID = previousTransactionID!; // use previous transaction ID
+    } else {
+      // generate new transaction ID based on the combination of sender and receiver IDs
+      final String uniqueID = senderUID.hashCode > receiverUID.hashCode
+          ? '$senderUID$receiverUID'
+          : '$receiverUID$senderUID';
+      final Uuid uuid = Uuid();
+      final String namespace = uuid.v4();
+      transactionID = uuid.v5(Uuid.NAMESPACE_OID, uniqueID);
+    }
+
+    // Code for updating transaction History Collection
+    // For Sender
+    await FirebaseFirestore.instance.collection('Transactions').add({
+      'uid': widget
+          .uid, // Setting the sender UID to uniquely identify the transaction
+      'transactionID':
+          transactionID, // Storing the unique transaction ID in the sender document
       'Amount': widget.transferAmount,
       'Type': 'Paid To',
       'Name': widget.recieverName,
-      'timestamp': FieldValue.serverTimestamp()
+      'timestamp': FieldValue.serverTimestamp(),
     });
-    //For Reciever
-    await _firestore.collection('Transactions').add({
+
+    // For Receiver
+    await FirebaseFirestore.instance.collection('Transactions').add({
       'uid':
-          recieverUID, //setting the reciever uid to uniquely identify transactions for that user
+          receiverUID, // Setting the receiver UID to uniquely identify the transaction
+      'transactionID':
+          transactionID, // Storing the same unique transaction ID in the receiver document
       'Amount': widget.transferAmount,
-      'Type': 'Recieved From',
-      'Name': Sendername,
-      'timestamp': FieldValue.serverTimestamp()
+      'Type': 'Received From',
+      'Name': senderName,
+      'timestamp': FieldValue.serverTimestamp(),
     });
+
+    // Store the transaction ID for future transactions between the same sender and receiver
+    previousTransactionID = transactionID;
   }
+
+// Function to send FCM notification to a specific device token
+//   FirebaseMessaging messaging = FirebaseMessaging.instance;
+//   Future<void> sendFCMNotification(
+//       String deviceToken, String title, String body) async {}
+//
+// // Function to fetch FCM token for current device
+//   Future<String?> getDeviceFCMToken() async {
+//     String? deviceToken = await FirebaseMessaging.instance.getToken();
+//     RemoteMessage message = RemoteMessage(
+//       notification: RemoteNotification(
+//         title: 'Title',
+//         body: 'Message Body',
+//       ),
+//     );
+//     await messaging.s(to: deviceToken, messageType: message);
+//   }
+//
+// // Function to send transaction notification to sender and receiver
+//   Future<void> sendTransactionNotification(
+//       String senderId, String receiverId, double amount) async {
+//     // Get sender FCM token for current device
+//     String? senderToken = await getDeviceFCMToken();
+//
+//     // Fetch receiver FCM token from Firestore
+//     DocumentSnapshot receiverSnapshot = await FirebaseFirestore.instance
+//         .collection('users')
+//         .doc(receiverId)
+//         .get();
+//     String receiverToken = receiverSnapshot.data()['fcmToken'];
+//
+//     // Send notifications to sender and receiver
+//     await sendFCMNotification(senderToken!, 'Transaction successful',
+//         'You have debited $amount from your account.');
+//     await sendFCMNotification(receiverToken, 'Transaction successful',
+//         'You have credited $amount to your account.');
+//   }
 
   late String error_message = '';
   final List<TextEditingController> controllers =
@@ -206,6 +265,11 @@ class _otpWidgetState extends State<otpWidget> {
         });
         return false;
       }
+    }
+
+    // Function to get user device token by phone number
+    Future<String?> getDeviceToken(String phone) async {
+      final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
     }
 
     return SafeArea(

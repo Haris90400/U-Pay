@@ -34,7 +34,11 @@ class _transactionnHistoryState extends State<transactionnHistory> {
             }
             if (snapshot.data!.docs.isEmpty) {
               // If there are no search results, display a message
-
+              return Center(
+                child: Text(
+                  'No Transactions Found. Do your first transaction and get assured rewards',
+                ),
+              );
             }
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
@@ -42,7 +46,7 @@ class _transactionnHistoryState extends State<transactionnHistory> {
                 final data =
                     snapshot.data!.docs[index].data() as Map<String, dynamic>;
                 final String transactionType = data?['Type'];
-                if (transactionType.contains('Recieved')) {
+                if (transactionType.contains('Received')) {
                   return recieverMessageBubble(
                     sender: data?['Name'] ?? '',
                     Amount: data?['Amount'] ?? '',
@@ -55,8 +59,7 @@ class _transactionnHistoryState extends State<transactionnHistory> {
                 } else {
                   return Center(
                     child: Text(
-                      'No Transactions Found. Do your first transaction and get assured rewards',
-                    ),
+                        'No Transactions Found. Do your first transaction and get assured rewards'),
                   );
                 }
               },

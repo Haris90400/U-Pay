@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:u_pay_app/components/upi_widget.dart';
 import 'home.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class otpWidget extends StatefulWidget {
   final String uid;
@@ -33,6 +34,19 @@ class _otpWidgetState extends State<otpWidget> {
 
   final List<FocusNode> focusNodes = List.generate(6, (_) => FocusNode());
   bool _obscureText = true;
+
+  Future<void> updateDeviceToken(String uid) async {
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+    // Get the device token for the current device
+    String? deviceToken = await _firebaseMessaging.getToken();
+
+    // Update the user's document in the database with the new device token
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .update({'device_token': deviceToken});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,6 +139,7 @@ class _otpWidgetState extends State<otpWidget> {
                         .collection('Users')
                         .doc(widget.uid)
                         .update({'upiPin': pin});
+                    updateDeviceToken(widget.uid);
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(

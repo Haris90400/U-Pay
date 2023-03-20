@@ -5,6 +5,7 @@ import 'package:u_pay_app/components/password_field.dart';
 import 'package:u_pay_app/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'home.dart';
 
@@ -44,6 +45,11 @@ class _LoginScreenState extends State<LoginScreen> {
       final double userBalance = userDoc['Balance'];
       final String userPhone = userDoc['Phone'];
       final String userUserName = userDoc['Username'];
+      //Code for updating the user device token
+      String? fcmToken = await getFCMToken();
+      await FirebaseFirestore.instance.collection('Users').doc(uid).update({
+        'device_token': fcmToken,
+      });
 
       Navigator.pushReplacement(
           context,
@@ -73,6 +79,14 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       }
     }
+  }
+
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  //Function to get the current user device token which is trying to login
+  Future<String?> getFCMToken() async {
+    String? fcmToken = await messaging.getToken();
+    return fcmToken;
   }
 
   @override
@@ -194,8 +208,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   RoundedButton(
                                       Colour: Color(0xff24B3A8),
                                       Name: 'Log In',
-                                      onPressed: () {
+                                      onPressed: () async {
                                         logIn();
+
                                         // Navigator.push(
                                         //     context,
                                         //     MaterialPageRoute(

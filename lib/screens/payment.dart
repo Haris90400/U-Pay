@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:u_pay_app/components/upi_widget.dart';
-import 'package:u_pay_app/screens/amount.dart';
+import 'dart:ffi';
 
-import '../components/input_field.dart';
+import 'package:flutter/material.dart';
+import 'package:u_pay_app/screens/amount.dart';
+import 'package:u_pay_app/screens/transaction_history.dart';
+
 import '../components/rounded_button.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Payment extends StatelessWidget {
   late String number;
@@ -18,6 +20,27 @@ class Payment extends StatelessWidget {
       required this.UpayIdorPhone,
       required this.firstNameString,
       required this.uid});
+  late FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  //Function to get the logged in user transactionId
+  Future<String?> getTransactionId(String uid) async {
+    final CollectionReference users =
+        FirebaseFirestore.instance.collection('Transactions');
+    final QuerySnapshot snapshot =
+        await users.where('uid', isEqualTo: uid).get();
+    if (snapshot.size > 0) {
+      final DocumentSnapshot userDoc =
+          snapshot.docs.first as DocumentSnapshot<Map<String, dynamic>>;
+      final String? transactionId = userDoc['transactionID'];
+      return transactionId ?? null;
+    } else {
+      return null;
+    }
+  }
+
+  String? transactionId = null;
+  void retrievetransactionId() async {
+    transactionId = await getTransactionId(uid);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,19 +66,50 @@ class Payment extends StatelessWidget {
           ],
         )),
       ),
-      body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-        children: [
-          sendMessageBubble(
-            reciever: 'Haris',
-            Amount: '50',
-          ),
-          sendMessageBubble(reciever: 'Haris', Amount: '50'),
-          recieverMessageBubble(sender: 'Haris', Amount: '69'),
-          recieverMessageBubble(sender: 'Haris', Amount: '69'),
-          sendMessageBubble(reciever: 'Haris', Amount: '10'),
-          recieverMessageBubble(sender: 'Haris', Amount: '500'),
-        ],
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _firestore
+            .collection('Transactions')
+            .where('transactionID', isEqualTo: transactionId)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            // If data is not available, show a loading spinner
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.data!.docs.isEmpty) {
+            // If there are no search results, display a message
+            return Center(
+              child: Text(
+                'No Transactions Found. Do your first transaction and get assured rewards',
+              ),
+            );
+          }
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              final data =
+                  snapshot.data!.docs[index].data() as Map<String, dynamic>;
+              final String transactionType = data?['Type'];
+              if (transactionType.contains('Recieved')) {
+                return recieverMessageBubble(
+                  sender: data?['Name'] ?? '',
+                  Amount: data?['Amount'] ?? '',
+                );
+              } else if (transactionType.contains('Paid')) {
+                return sendMessageBubble(
+                  reciever: data?['Name'] ?? '',
+                  Amount: data?['Amount'] ?? '',
+                );
+              } else {
+                return Center(
+                  child: Text(''),
+                );
+              }
+            },
+          );
+        },
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
@@ -63,6 +117,9 @@ class Payment extends StatelessWidget {
             Colour: Color(0xff24B3A8),
             Name: 'Amount',
             onPressed: () {
+              print(transactionId);
+              print(username);
+              print(uid);
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -80,7 +137,7 @@ class Payment extends StatelessWidget {
 
 class sendMessageBubble extends StatelessWidget {
   final String reciever;
-  final String Amount;
+  final double Amount;
 
   sendMessageBubble({required this.reciever, required this.Amount});
 
@@ -124,7 +181,7 @@ class sendMessageBubble extends StatelessWidget {
 
 class recieverMessageBubble extends StatelessWidget {
   final String sender;
-  final String Amount;
+  final double Amount;
 
   recieverMessageBubble({required this.sender, required this.Amount});
 
