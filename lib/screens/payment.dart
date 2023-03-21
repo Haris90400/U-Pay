@@ -7,20 +7,28 @@ import 'package:u_pay_app/screens/transaction_history.dart';
 import '../components/rounded_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Payment extends StatelessWidget {
-  late String number;
-  late String msg;
+class Payment extends StatefulWidget {
   final String? username;
   final String? UpayIdorPhone;
   final String? firstNameString;
   final String uid;
 
-  Payment(
-      {required this.username,
-      required this.UpayIdorPhone,
-      required this.firstNameString,
-      required this.uid});
-  late FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Payment({
+    required this.username,
+    required this.UpayIdorPhone,
+    required this.firstNameString,
+    required this.uid,
+  });
+
+  @override
+  _PaymentState createState() => _PaymentState();
+}
+
+class _PaymentState extends State<Payment> {
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  String? transactionId;
+
   //Function to get the logged in user transactionId
   Future<String?> getTransactionId(String uid) async {
     final CollectionReference users =
@@ -37,9 +45,17 @@ class Payment extends StatelessWidget {
     }
   }
 
-  String? transactionId = null;
   void retrievetransactionId() async {
-    transactionId = await getTransactionId(uid);
+    String? id = await getTransactionId(widget.uid);
+    setState(() {
+      transactionId = id;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    retrievetransactionId();
   }
 
   @override
@@ -48,23 +64,25 @@ class Payment extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Color(0xff24B3A8),
         title: Container(
-            child: Row(
-          children: [
-            Padding(
+          child: Row(
+            children: [
+              Padding(
                 padding: EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 0.0),
                 child: CircleAvatar(
                   backgroundColor: Colors.black,
                   child: Text(
-                    firstNameString!,
+                    widget.firstNameString!,
                     style: TextStyle(fontSize: 25.0),
                   ),
-                )),
-            Text(
-              username!,
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-            ),
-          ],
-        )),
+                ),
+              ),
+              Text(
+                widget.username!,
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore
@@ -92,7 +110,7 @@ class Payment extends StatelessWidget {
               final data =
                   snapshot.data!.docs[index].data() as Map<String, dynamic>;
               final String transactionType = data?['Type'];
-              if (transactionType.contains('Recieved')) {
+              if (transactionType.contains('Received')) {
                 return recieverMessageBubble(
                   sender: data?['Name'] ?? '',
                   Amount: data?['Amount'] ?? '',
@@ -118,16 +136,16 @@ class Payment extends StatelessWidget {
             Name: 'Amount',
             onPressed: () {
               print(transactionId);
-              print(username);
-              print(uid);
+              print(widget.username);
+              print(widget.uid);
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => Amount(
-                            username: username,
-                            UPIorPhone: UpayIdorPhone,
-                            headerfirstname: firstNameString,
-                            uid: uid,
+                            username: widget.username,
+                            UPIorPhone: widget.UpayIdorPhone,
+                            headerfirstname: widget.firstNameString,
+                            uid: widget.uid,
                           )));
             }),
       ),

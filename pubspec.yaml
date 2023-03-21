@@ -46,6 +46,7 @@ dependencies:
   shared_preferences: ^2.0.18
   firebase_messaging: ^14.2.6
   uuid: ^3.0.7
+  http: ^0.13.5
 
 
 dev_dependencies:
