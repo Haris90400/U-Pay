@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:u_pay_app/screens/payment_confirmation.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class otpWidget extends StatefulWidget {
   final double transferAmount;
@@ -244,17 +245,22 @@ class _otpWidgetState extends State<otpWidget> {
   static const String messagingSenderId = '409095380824';
   Future<void> sendNotification(String token, String title, String body) async {
     final String serverToken =
-        'AAAAXz_8H1g:APA91bFc-tZjgiZCsgkrEIXQuf2Dk58lKQaEb34v0KWGX5FeO2bGjlJbvhEHecHrEKKqb8eVeqzPDd0tjA9Ys7Q0oChx_Z7zEPETiE2dvGuybfSraZDtQ_P-NGdyRzwI2Pr0bNm5-s9n';
+        'AAAAXz_8H1g:APA91bFc-tZjgiZCsgkrEIXQuf2Dk58lKQaEb34v0KWGX5FeO2bGjlJbvhEHecHrEKKqb8eVeqzPDd0tjA9Ys7Q0oChx_Z7zEPETiE2dvGuybfSraZDtQ_P-NGdyRzwI2Pr0bNm5-s9n'; // Your FCM server token
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
     // Request permission to receive notifications (required on iOS)
     await firebaseMessaging.requestPermission();
 
-    // Configure the FirebaseMessaging instance to receive notifications while the app is in the foreground
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print(
-          "Foreground notification: ${message.notification?.title}, ${message.notification?.body}");
-    });
+    // Initialize the local notifications plugin
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    // Initialize the plugin with the Android initialization settings
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('app_icon');
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
     final Map<String, dynamic> notificationData = <String, dynamic>{
       'title': title,
@@ -286,10 +292,35 @@ class _otpWidgetState extends State<otpWidget> {
 
     if (response.statusCode == 200) {
       print('Notification sent successfully');
+
+      // Display a local notification if the app is in the foreground
+      if (WidgetsBinding.instance!.lifecycleState ==
+          AppLifecycleState.resumed) {
+        const AndroidNotificationDetails androidPlatformChannelSpecifics =
+            AndroidNotificationDetails(
+          'channel_id',
+          'channel_name',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+          showWhen: false,
+        );
+        const NotificationDetails platformChannelSpecifics =
+            NotificationDetails(android: androidPlatformChannelSpecifics);
+
+        await flutterLocalNotificationsPlugin.show(
+          0,
+          notificationData['title'] as String?,
+          notificationData['body'] as String?,
+          platformChannelSpecifics,
+          payload: 'payload',
+        );
+      }
     } else {
       print('Failed to send notification. Error: ${response.reasonPhrase}');
     }
   }
+
 //
 // // Function to send transaction notification to sender and receiver
 //   Future<void> sendTransactionNotification(
