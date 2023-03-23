@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:u_pay_app/screens/welcome_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
