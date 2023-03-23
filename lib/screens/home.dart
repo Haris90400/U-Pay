@@ -3,6 +3,7 @@ import 'package:u_pay_app/screens/about.dart';
 import 'package:u_pay_app/screens/add_account.dart';
 import 'package:u_pay_app/screens/check_balance.dart';
 import 'package:u_pay_app/screens/images.dart';
+import 'package:u_pay_app/screens/manage_account.dart';
 import 'package:u_pay_app/screens/pay_bank.dart';
 import 'package:u_pay_app/screens/pay_contacts.dart';
 import 'package:u_pay_app/screens/pay_upi.dart';
@@ -168,7 +169,7 @@ class _HomeState extends State<Home> {
                                                 radius: 25.0,
                                               ),
                                               Text(
-                                                "Add Account",
+                                                "Add",
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               )
@@ -181,7 +182,7 @@ class _HomeState extends State<Home> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          RegisterScreen()));
+                                                          ManageScreen()));
                                             },
                                             child: Column(
                                               mainAxisAlignment:
@@ -199,7 +200,7 @@ class _HomeState extends State<Home> {
                                                   radius: 25.0,
                                                 ),
                                                 Text(
-                                                  'Manage Account',
+                                                  'Manage',
                                                   style: TextStyle(
                                                       color: Colors.white),
                                                 )
@@ -228,7 +229,7 @@ class _HomeState extends State<Home> {
                                                   radius: 25.0,
                                                 ),
                                                 Text(
-                                                  'Student Points',
+                                                  'Student',
                                                   style: TextStyle(
                                                       color: Colors.white),
                                                 )

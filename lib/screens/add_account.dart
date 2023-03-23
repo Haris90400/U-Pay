@@ -114,10 +114,10 @@ class _AddAccountState extends State<AddAccount> {
                       padding: EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
                       child: GestureDetector(
                         onTap: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => Home(userName: '', userBalance: 0,)));
+                           Navigator.push(
+                               context,
+                              MaterialPageRoute(
+                                   builder: (context) => Home(userName: '', userBalance: 0, userPhone: "", userUserName: '', uid: '',)));
                         },
                         child: CircleAvatar(
                           child: Icon(
