@@ -25,8 +25,8 @@ class HomePage extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0),
             child: IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MyProfile()));
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => MyProfile()));
               },
               icon: Icon(
                 Icons.account_circle,

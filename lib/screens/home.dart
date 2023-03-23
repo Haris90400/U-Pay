@@ -46,8 +46,15 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0),
             child: IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MyProfile()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MyProfile(
+                              Name: widget.userName,
+                              userName: widget.userUserName,
+                              Phone: widget.userPhone,
+                              uid: widget.userPhone,
+                            )));
               },
               icon: Icon(
                 Icons.account_circle,

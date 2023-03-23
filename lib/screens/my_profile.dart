@@ -7,6 +7,15 @@ import 'package:u_pay_app/components/rounded_button.dart';
 import 'package:u_pay_app/screens/welcome_screen.dart';
 
 class MyProfile extends StatelessWidget {
+  final String Name;
+  final String userName;
+  final String Phone;
+  final String uid;
+  MyProfile(
+      {required this.Name,
+      required this.userName,
+      required this.Phone,
+      required this.uid});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +46,7 @@ class MyProfile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Pritesh Patil",
+                      Name,
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
@@ -45,14 +54,14 @@ class MyProfile extends StatelessWidget {
                       height: 15,
                     ),
                     Text(
-                      "+91 8689987277",
+                      Phone,
                       style: TextStyle(fontSize: 18),
                     ),
                     SizedBox(
                       height: 2,
                     ),
                     Text(
-                      "pritesh@upay",
+                      userName,
                       style: TextStyle(fontSize: 18),
                     ),
                   ],
