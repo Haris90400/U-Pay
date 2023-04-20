@@ -8,6 +8,7 @@ import 'package:u_pay_app/screens/pay_bank.dart';
 import 'package:u_pay_app/screens/pay_contacts.dart';
 import 'package:u_pay_app/screens/pay_upi.dart';
 import 'package:u_pay_app/screens/registration_screen.dart';
+import 'package:u_pay_app/screens/student_point.dart';
 import 'package:u_pay_app/screens/transaction_history.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../components/input_field.dart';
@@ -208,11 +209,11 @@ class _HomeState extends State<Home> {
                                             )),
                                         GestureDetector(
                                             onTap: () {
-                                              // Navigator.push(
-                                              //     context,
-                                              //     MaterialPageRoute(
-                                              //         builder: (context) =>
-                                              //             PayUpi()));
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          StudentPoint()));
                                             },
                                             child: Column(
                                               mainAxisAlignment:
