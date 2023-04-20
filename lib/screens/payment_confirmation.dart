@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+
+import 'home.dart';
 
 class PaymentConformationScreen extends StatefulWidget {
   @override
@@ -14,29 +17,12 @@ class _PaymentConformationScreenState extends State<PaymentConformationScreen>
   late Animation<double> _scaleAnimation;
   late Animation<double> _opacityAnimation;
 
-  @override
   void initState() {
     super.initState();
-
-    // Initialize the animation controller
-    _controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
-
-    // Create a tween animation for scaling the icon
-    _scaleAnimation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Interval(0, 0.5, curve: Curves.easeIn),
-    ));
-
-    // Create a tween animation for changing the opacity of the icon
-    _opacityAnimation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Interval(0.5, 1, curve: Curves.easeOut),
-    ));
-
-    // Start the animation and make it repeat
-    _controller.repeat();
+    Timer(Duration(seconds: 8), () => Navigator.pop(context));
   }
+
+  // Initialize the animation controller
 
   @override
   void dispose() {
@@ -48,10 +34,10 @@ class _PaymentConformationScreenState extends State<PaymentConformationScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Center(
           child: Image(
-        image: NetworkImage(
-            'https://media.tenor.com/bm8Q6yAlsPsAAAAi/verified.gif'),
+        image: AssetImage('images/tick0.gif'),
         fit: BoxFit.cover,
       ) // child: Column(
           //   mainAxisAlignment: MainAxisAlignment.center,
