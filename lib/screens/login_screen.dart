@@ -210,11 +210,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                       Name: 'Log In',
                                       onPressed: () async {
                                         logIn();
-
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) => Home()));
                                       })
                                 ],
                               ),
